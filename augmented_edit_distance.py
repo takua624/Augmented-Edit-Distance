@@ -1,5 +1,7 @@
 from itertools import permutations
 
+# Created by Yun-Fei "Takua" Liu
+
 def repeat_score(w1,w2,cc):
 	# default: w1 has more cc than w2
 	NN = len(w1)
