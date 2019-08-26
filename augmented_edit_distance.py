@@ -29,7 +29,8 @@ def repeat_score(w1,w2,cc):
 	# the best case is 1+0, definitely. 
 	# So in this case, the optimum mapping between the multiple c's is:
 	# c1 in w1 maps to c0 in w2, and c3 in w1 maps to c3 in w2
-	# c2 in w1 will lead to a penalty of extra repeated cc, which is handled not in this function, but in the calling function "same_length()"
+	# c2 in w1 will lead to a penalty of extra repeated cc, which is handled not in this function, 
+	# but in the calling function "same_length()"
 	perm_pos1 = list(permutations(pos1))
 	for perm in perm_pos1:
 		pos1 = perm
@@ -67,8 +68,11 @@ def same_length(w1, w2, dynamic_repeat_penalty=True):
 			# because we are running this for loop with set(w1)
 			# maybe we can adjust the penalty for letter number mismatch?
 			# as long as two words share the same letter, the penalty shouldn't be as high as NN
-			# what about dynamic penalty? the penalty drops as cc_in_w2/cc_in_w1 increases --> account for the fact that we don't care the number of "a" if the sequences are "aaaaaaaaa" and "aaaaaaaa"
-			# when cc_in_w1<cc_in_w2, the score will be over-penalized by NN*(cc_in_w2-cc_in_w1) due to some letters the letter that corresponds to the extra cc's in w2. We have to subtract the extra penalty to achieve symmetry
+			# what about dynamic penalty? the penalty drops as cc_in_w2/cc_in_w1 increases 
+			# --> account for the fact that we don't care the number of "a" if the sequences are "aaaaaaaaa" and "aaaaaaaa"
+			# when cc_in_w1<cc_in_w2, the score will be over-penalized by NN*(cc_in_w2-cc_in_w1) 
+			# due to some letters the letter that corresponds to the extra cc's in w2. 
+			# We have to subtract the extra penalty to achieve symmetry
 		
 		score += repeat_score(w2,w1,cc)
 	return score
