@@ -23,6 +23,43 @@ Interested reader may varify these issues by running the Python implementation o
 Two other frequently cited distance measures are "open-bigram coding" [5] and "superposition matching" [6]. They are both ingenious algorithms; however, I will not go into the details of their implementations. The drawback of open-bigram coding is that, it is asymmetric. That is, the distance between word 1 and word 2 is different from that between word 2 and word 1. The superposition matching algorithm also yields asymmetric outputs when there are repeated letters in the input words. 
 
 Davis programmed a “Match Calculator” which implemented both the superposition matching (named “SOLAR (Spatial Coding)”) and the open-bigram similarity metric (named “SERIOL_2001 (Open Bigram)”), and is freely available online (http://www.pc.rhul.ac.uk/staff/c.davis/Utilities/MatchCalc/index.htm), interested readers may explore the issues with these orthographic similarity metric mentioned in this section. (In all the examples concerning superposition matching in this article, the parameter “sigma” is 1, and “dynamic end letter marking” is disabled.)
+## The augmented edit distance
+To overcome the drawbacks of the three orthographic similarity metrics while retaining their advantages, I propose the augmented edit distance (AED).
+
+The AED has five key features:
+1. Shared letters between word1 and word2 are considered. Therefore, anagrams are considered more similar than totally unrelated words.
+2. The output is symmetric, the distance between word1 and word2 is the same as the distance between word2 and word1.
+3. It functions normally even when there are repeated letters in either word.
+4. It accounts for the fact that humans are unable to distinguish the quantities of items in two arrays when the ratio between the quantities approaches 1.
+5. It offers the option to regard words that share the same initial letters as more similar.
+
+In the following sub-sections, I’ll introduce the working principles of AED.
+### The vanilla case: same length, no repeated letter
+To estimate the orthographic similarity between word 1 and word 2, the AED algorithm basically calculates for each letter in word 1 the (absolute) difference between its positions in both words. If a letter exists only in word 1, the “difference” is the length of word 1, which indicates this letter can’t be found in word 2. These differences are summed together and divided by the length of word 1, the resulting value is the augmented edit distance between word 1 and word 2.
+
+If word 1 and word 2 use completely different set of letters, there AED value is the length of word 1, which is the maximum distance between word 1 and any word with the same length. In this aspect, AED is similar to Levenshtein edit distance.
+
+The following table illustrates how to derive the AED values between “STAR” and “RATS”, and between “STAR” and “BLUE”.
+![image](https://user-images.githubusercontent.com/26756686/202929460-4566c695-d3d3-4b7f-ad87-1f294dad411f.png)
+
+### Same length, with repeated letters
+Suppose there is a shared repeated letter C between word 1 and word 2. C repeats N times in word 1, and M times in word 2, denoted [C11, C12, … C1N] and [C21, C22, … C2M], respectively. Suppose N>M. The AED algorithm treats all M C’s as different letters and all N C’s as different letters, and among the N C’s in word 1, M of them are the same as the M C’s in word 2, the job of the AED algorithm is to find the optimum pairing between M C’s in word 1 and M C’s in word 2 that results in the smallest distance.
+
+To do so, the AED algorithm generates all the possible pairings between the C’s in word 1 and the C’s in word 2. The number of all possible pairings is:
+![image](https://user-images.githubusercontent.com/26756686/202929525-f68e62d2-d86b-41e3-8fa9-f8ee7726f3d3.png)
+
+For each pairing, such as [(C11, C21), (C12, C22),…..., (C1M, C2M), C1(M+1), ……, C1N], the distances between the C pairs is calculated and summed. Each of the (M-N) C’s which isn’t paired with a C in word 2 is regarded as a letter that exist only in word 1, and is attributed the length of word 1 as its distance. The minimum sum of distances among all pairings is selected as the overall distance of the repeated letter C, and summed together with the distances of the unique letters. If there are multiple different repeated letters in the words, the minimum sum of distances for each repeated letter is computed.
+
+The following table illustrates the computation for the AED value between “XAAAY” and “ABCAD”. Note that the “A”s that are paired up are persented in the same color.
+![image](https://user-images.githubusercontent.com/26756686/202929581-55083a74-3803-4792-902e-e2cfb3b6e30f.png)
+### Words with different lengths
+If the two words to compare are different in length, the shorter word is padded with non-alphabetical symbols such as “\_” to attain the identical length as the longer word.
+### Strings of repeated letters with different length
+When we compare the numbers of identical dots in two arrays, we are keen to notice the ratio between the numbers, but not the absolute difference between them. For example, while we can tell the difference between 2 dots and 3 dots, it may be very hard to tell the difference between 100 dots and 101 dots. This is the Weber's Law (https://en.wikipedia.org/wiki/Weber%E2%80%93Fechner_law). 
+
+Likewise, a string pair like "aaaaaaaaaa" and "aaaaaaaaa" should be more difficult to tell apart from a pair like "aaa" and "aa" - although they both have the distance of 1. 
+
+In AED, when the same letter appears multiple times in either word, the computed distance between the two words is reduced according to the ratio between the numbers of appearance.
 ## Reference
 [1] Coltheart, M., Davelaar, E., Jonasson, J. T., & Besner, D. (1977). Access to the Internal Lexicon.
 
