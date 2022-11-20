@@ -1,4 +1,5 @@
 from itertools import permutations
+import numpy as np
 
 def repeat_score(w1,w2,cc):
 	# default: w1 has more cc than w2
@@ -58,10 +59,15 @@ def same_length(w1, w2, dynamic_repeat_penalty=True):
 		
 		repeat_ratio = repeat_ratio**1
 		repeat_diff = cc_in_w1-cc_in_w2
-		if cc_in_w1>cc_in_w2:
-			score += repeat_diff*NN*(1-repeat_ratio)
-		if cc_in_w1<cc_in_w2: # repeat_diff is a negative value in this case!
-			score += repeat_diff*NN*(repeat_ratio)
+		if not dynamic_repeat_penalty:
+			if cc_in_w1>cc_in_w2:
+				score += repeat_diff*NN
+		else:
+			log_weight = 80
+			if cc_in_w1>cc_in_w2:
+				score += repeat_diff*NN*(1+np.log10(1-(1-1/log_weight)*repeat_ratio)/np.log10(log_weight))
+			if cc_in_w1<cc_in_w2: # repeat_diff is a negative value in this case!
+				score -= NN+repeat_diff*NN*(1+np.log10(1-(1-1/log_weight)*repeat_ratio)/np.log10(log_weight))
 			# this looks asymmetric, but it should be! 
 			# because we are running this for loop with set(w1)
 			# maybe we can adjust the penalty for letter number mismatch?
