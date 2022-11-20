@@ -20,7 +20,9 @@ Additionally, because Levenshtein edit distance is agnostic of letter positions,
 
 Interested reader may varify these issues by running the Python implementation of Levenshtein edit distance included in this repository: `edit_distance.py`.
 ## Other distance measures and their drawbacks
-Two other frequently cited distance measures are "open-bigram coding" [5] and "superposition matching" [6]. They are both ingenious algorithms; however, I will not go into the details of their implementation. 
+Two other frequently cited distance measures are "open-bigram coding" [5] and "superposition matching" [6]. They are both ingenious algorithms; however, I will not go into the details of their implementations. The drawback of open-bigram coding is that, it is asymmetric. That is, the distance between word 1 and word 2 is different from that between word 2 and word 1. The superposition matching algorithm also yields asymmetric outputs when there are repeated letters in the input words. 
+
+Davis programmed a “Match Calculator” which implemented both the superposition matching (named “SOLAR (Spatial Coding)”) and the open-bigram similarity metric (named “SERIOL_2001 (Open Bigram)”), and is freely available online (http://www.pc.rhul.ac.uk/staff/c.davis/Utilities/MatchCalc/index.htm), interested readers may explore the issues with these orthographic similarity metric mentioned in this section. (In all the examples concerning superposition matching in this article, the parameter “sigma” is 1, and “dynamic end letter marking” is disabled.)
 ## Reference
 [1] Coltheart, M., Davelaar, E., Jonasson, J. T., & Besner, D. (1977). Access to the Internal Lexicon.
 
