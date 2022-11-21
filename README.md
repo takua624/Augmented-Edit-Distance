@@ -1,4 +1,15 @@
 # Augmented-Edit-Distance
+## Description of the function
+In the Python script `augmented_edit_distance.py`, you will find the function `augmented_ED()`.
+It takes two words as input (`w1` and `w2`), and returns the "distance" between the words in terms of their spelling. 
+Please note that conceptually, "distance" is the opposity of "similarity".
+It takes three parameters:
+* `normalize`: 0, 1, or 2. Default 1 
+  - 0: the maximum "distance" between two words is the square of the length of the longer word. E.g., the distance between "STAR" and "BLUE" is 16, between "CAR" and "DOG" is's 9.
+  - 1: the maximum "distance" between two words is the length of the longer word. E.g., the distance between "STAR" and "BLUE is 4, between "CAR" and "DOG" it's 3
+  - 2: the "distance" falls between 0 and 1. E.g., the distance between "STAR" and "BLUE" and between "CAR" and "DOG" are both 1.
+* `dynamic_repeat_penalty`: True or False, default True. Controls whether or not to regard two strings of repeated letters to be more similar when the ratio between the lengths of both strings approaches 1. E.g., if set to True, "aaaaaaaaa" and "aaaaaaaa" are considered more similar than "aaa" and "aa", although the strings in both pairs differ by 1 letter.
+* `onset_weight`: from 0 to 1, default 0. Controls how important shared initial letter is to the similarity between words. When set to 0, shared initial letter is not taken into account. E.g., the distance between "abcd" and "axyz" and the distance between "abcd" and "xbyz" are both 3. When set to 1, two words are regarded as identical if they share the initial letter. That is, the distance between "abcd" and "axyz" is 0. If you'd like to use this feature, you may set it to no larger than 0.2.
 ## Background
 Orthographic similarity measures how similar two words are spelled. It is intuitive that in terms of spelling, “CAT” is more similar to “CAR” than to “DOG”, but how similar is it? While “CAT” is also more similar to “ACT” than to “DOG”, between “ACT” and “CAR”, which one is more similar to “CAT”? An objective orthographic similarity metric seeks to quantify and distinguish between different levels of similarity.
 
@@ -60,7 +71,15 @@ When we compare the numbers of identical dots in two arrays, we are keen to noti
 
 Likewise, a string pair like "aaaaaaaaaa" and "aaaaaaaaa" should be more difficult to tell apart from a pair like "aaa" and "aa" - although they both have the distance of 1. 
 
-In AED, when the same letter appears multiple times in either word, the computed distance between the two words is reduced according to the ratio between the numbers of appearance.
+In AED, when the same letter appears multiple times in either word, the computed distance between the two words is reduced according to the ratio between the numbers of appearance. You can turn on and off this functionality by setting the parameter `dynamic_repeat_penalty` to True or False.
+### Words that begin with the same letter
+We perceive a pair words that begins with the same letter to be more similar than a pair of words with different initial letters. You may decide how important the shared initial letter should be by passing a value (between 0 and 1) to the parameter `onset_weight`.
+
+### Normalization
+In terms of the raw output (`normalize = 0`), the maximum "distance" between two words is the square of the length of the longer word. For example, the "distance" between "STAR" and "BLUE" is 16. If `normalize = 1`, the raw output is divided by the length of the longer word, such that the maximum distance is the length of the longer word - which is in the same scope as Levenshtein edit distance. If you want to compare the output of AED and the output of Levenshtein edit distance, please set `normalize` to 1. If `normalize = 2`, the raw output is devided by the square of the length of the longer word, such that the output falls between 0 and 1.
+## Author
+This function is designed by Yun-Fei "Takua" Liu.
+https://yunfeitakualiu.com/
 ## Reference
 [1] Coltheart, M., Davelaar, E., Jonasson, J. T., & Besner, D. (1977). Access to the Internal Lexicon.
 
