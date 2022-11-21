@@ -51,6 +51,7 @@ To do so, the AED algorithm generates all the possible pairings between the C’
 For each pairing, such as [(C11, C21), (C12, C22),…..., (C1M, C2M), C1(M+1), ……, C1N], the distances between the C pairs is calculated and summed. Each of the (M-N) C’s which isn’t paired with a C in word 2 is regarded as a letter that exist only in word 1, and is attributed the length of word 1 as its distance. The minimum sum of distances among all pairings is selected as the overall distance of the repeated letter C, and summed together with the distances of the unique letters. If there are multiple different repeated letters in the words, the minimum sum of distances for each repeated letter is computed.
 
 The following table illustrates the computation for the AED value between “XAAAY” and “ABCAD”. Note that the “A”s that are paired up are persented in the same color.
+
 ![image](https://user-images.githubusercontent.com/26756686/202929581-55083a74-3803-4792-902e-e2cfb3b6e30f.png)
 ### Words with different lengths
 If the two words to compare are different in length, the shorter word is padded with non-alphabetical symbols such as “\_” to attain the identical length as the longer word.
